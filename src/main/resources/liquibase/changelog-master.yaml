@@ -1,0 +1,8 @@
+# TODO: Как автоматически генерировать миграции?
+# TODO: liquibase-maven-plugin?
+# TODO: liquibase update --changelog-file=./liquibase/changelog-master.yaml  --url=jdbc:postgresql://localhost:5444/rupikz --password=admin --username=admin
+# TODO: как не передавать параметры?
+
+databaseChangeLog:
+  - include:
+      file: liquibase/1-init.yaml

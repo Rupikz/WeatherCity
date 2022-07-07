@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1-init
+      author: example@example.ru
+      changes:
+        - createTable:
+            schemaName: public
+            tableName: cities
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: uuid
+              - column:
+                  constraints:
+                    unique: true
+                    nullable: false
+                  name: name
+                  type: varchar(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: type
+                  type: varchar(255)
+              - column:
+                  name: description
+                  type: text
