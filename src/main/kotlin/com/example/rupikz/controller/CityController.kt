@@ -9,6 +9,10 @@ import org.springframework.validation.annotation.Validated
 import java.util.UUID
 import javax.validation.Valid
 import com.example.rupikz.entity.CityEntity
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import javax.validation.constraints.NotNull
 
 @Validated
@@ -24,8 +28,10 @@ class CityController(private val cityService: CityService) {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping()
-    fun find(): List<CityEntity> {
-        return cityService.find()
+    fun findAll(
+        @PageableDefault(size = 50, sort = ["name"], direction = Sort.Direction.ASC) pageable: Pageable
+    ): Page<CityEntity> {
+        return cityService.findAll(pageable)
     }
 
     @ResponseStatus(HttpStatus.CREATED)

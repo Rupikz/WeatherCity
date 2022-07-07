@@ -6,6 +6,8 @@ import com.example.rupikz.dto.CityCreateDto
 import com.example.rupikz.repository.CityRepository
 import com.example.rupikz.entity.CityEntity
 import com.example.rupikz.enum.CityType
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -14,7 +16,7 @@ class CityService(
     private val cityRepository: CityRepository
 ) {
 
-    fun find(): List<CityEntity> = cityRepository.findAll()
+    fun findAll(pageable: Pageable): Page<CityEntity> = cityRepository.findAll(pageable)
 
     fun findOne(id: UUID): CityEntity {
         if (!cityRepository.existsById(id)) throw CityNotFoundException()
