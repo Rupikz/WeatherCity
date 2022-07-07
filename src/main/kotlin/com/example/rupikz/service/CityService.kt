@@ -1,5 +1,6 @@
 package com.example.rupikz.service
 
+import com.example.rupikz.common.exception.CityAlreadyExistException
 import com.example.rupikz.common.exception.CityNotFoundException
 import com.example.rupikz.dto.CityCreateDto
 import com.example.rupikz.repository.CityRepository
@@ -21,9 +22,10 @@ class CityService(
     }
 
     fun create(cityCreateDto: CityCreateDto): CityEntity {
+        if (cityRepository.existsByName(cityCreateDto.name)) throw CityAlreadyExistException()
         return CityEntity().apply {
             this.name = cityCreateDto.name
-            this.type = CityType.LARGE // TODO: брать из дто
+            this.type = CityType.valueOf(cityCreateDto.type)
             this.description = cityCreateDto.description
             cityRepository.save(this)
         }
