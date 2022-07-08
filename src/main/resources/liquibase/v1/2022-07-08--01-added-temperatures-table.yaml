@@ -1,29 +1,33 @@
 databaseChangeLog:
   - changeSet:
-      id: 1-init
+      id: 2022-07-08--01-added-temperatures-table.yaml
       author: example@example.ru
       changes:
         - createTable:
             schemaName: public
-            tableName: cities
+            tableName: temperatures
             columns:
               - column:
+                  name: id
+                  type: uuid
                   constraints:
                     nullable: false
                     primaryKey: true
-                  name: id
-                  type: uuid
               - column:
+                  name: date
+                  type: date
                   constraints:
                     unique: true
                     nullable: false
-                  name: name
-                  type: varchar(255)
               - column:
+                  name: celsius
+                  type: smallint
                   constraints:
                     nullable: false
-                  name: type
-                  type: varchar(255)
               - column:
-                  name: description
-                  type: text
+                  name: city_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: temperatures_city_id_fkey
+                    references: cities(id)

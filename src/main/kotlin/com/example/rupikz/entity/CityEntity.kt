@@ -3,6 +3,7 @@ package com.example.rupikz.entity
 import javax.persistence.*
 import com.example.rupikz.enum.CityType
 import org.hibernate.Hibernate
+
 // TODO: Data class?
 // TODO: Как использовать lateinit
 // TODO: Как настроить автоформатирование
@@ -11,6 +12,7 @@ import org.hibernate.Hibernate
 @Entity
 @Table(name = "cities")
 data class CityEntity(
+
     @Column(nullable = false)
     var name: String? = null,
 
@@ -18,8 +20,12 @@ data class CityEntity(
     @Enumerated(value = EnumType.STRING)
     var type: CityType? = null,
 
-    @Column()
-    var description: String? = null
+    @Column(length = 255)
+    var description: String? = null,
+
+    @OneToMany(mappedBy = "city", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val temperatures: List<TemperatureEntity>? = null
+
 ) : BaseEntity() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

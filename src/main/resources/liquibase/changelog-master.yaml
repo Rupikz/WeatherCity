@@ -5,4 +5,7 @@
 
 databaseChangeLog:
   - include:
-      file: liquibase/1-init.yaml
+      file: liquibase/v1/2022-07-07--01-init.yaml
+  - include:
+      file: liquibase/v1/2022-07-08--01-added-temperatures-table.yaml
+

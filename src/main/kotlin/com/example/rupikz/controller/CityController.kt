@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull
 
 @Validated
 @RestController
-@RequestMapping("/cities")
+@RequestMapping("cities")
 class CityController(private val cityService: CityService) {
 
     @ResponseStatus(HttpStatus.OK)

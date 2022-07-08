@@ -9,12 +9,18 @@ import javax.validation.ConstraintViolationException
 class CityNotFoundException : RuntimeException("City not found")
 class CityAlreadyExistException : RuntimeException("City already exist")
 
+class TemperatureNotFoundException : RuntimeException("Temperature not found")
+class TemperatureAlreadyExistException : RuntimeException("Temperature already exist")
+
 @RestControllerAdvice
 class ExceptionHandler {
-    @ExceptionHandler(CityNotFoundException::class)
+    @ExceptionHandler(value = [
+        CityNotFoundException::class,
+        TemperatureNotFoundException::class
+    ])
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun notFoundException(e: CityNotFoundException): ErrorMessage {
-        return errorMessage(e, "city_not_found")
+    fun notFoundException(e: RuntimeException): ErrorMessage {
+        return errorMessage(e, "not_found")
     }
 
     @ExceptionHandler(ConstraintViolationException::class)
@@ -23,10 +29,13 @@ class ExceptionHandler {
         return errorMessage(e, "validation_failed")
     }
 
-    @ExceptionHandler(CityAlreadyExistException::class)
+    @ExceptionHandler(value = [
+        CityAlreadyExistException::class,
+        TemperatureAlreadyExistException::class
+    ])
     @ResponseStatus(HttpStatus.CONFLICT)
-    fun alreadyExistException(e: CityAlreadyExistException): ErrorMessage {
-        return errorMessage(e, "city_already_exist")
+    fun alreadyExistException(e: RuntimeException): ErrorMessage {
+        return errorMessage(e, "already_exist")
     }
 
     fun errorMessage(exception: Throwable, code: String) = ErrorMessage(exception.message ?: "", code)

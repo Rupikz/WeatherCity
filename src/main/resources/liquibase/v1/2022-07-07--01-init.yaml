@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2022-07-07--01-init.yaml
+      author: example@example.ru
+      changes:
+        - createTable:
+            schemaName: public
+            tableName: cities
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
