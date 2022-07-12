@@ -2,6 +2,7 @@ package com.example.rupikz.controller
 
 import com.example.rupikz.common.validation.ValidUUID
 import com.example.rupikz.dto.TemperatureCreateDto
+import com.example.rupikz.dto.request.TemperatureAverageDto
 import com.example.rupikz.entity.TemperatureEntity
 import com.example.rupikz.service.TemperatureService
 import org.springframework.web.bind.annotation.*
@@ -26,6 +27,15 @@ class TemperatureController(private val temperatureService: TemperatureService) 
         @PageableDefault(size = 50, sort = ["date"], direction = Sort.Direction.ASC) pageable: Pageable
     ): Page<TemperatureEntity> {
         return temperatureService.findAll(pageable)
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("{id}/average")
+    fun average(
+        @NotNull @ValidUUID @PathVariable("id") id: String,
+        @Valid @RequestBody temperatureAverageDto: TemperatureAverageDto // TODO: почему нельзя валидировать класс в RequestParam?
+    ): Double {
+        return temperatureService.average(UUID.fromString(id), temperatureAverageDto)
     }
 
     @ResponseStatus(HttpStatus.CREATED)

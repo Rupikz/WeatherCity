@@ -4,6 +4,7 @@ import com.example.rupikz.common.exception.CityNotFoundException
 import com.example.rupikz.common.exception.TemperatureAlreadyExistException
 import com.example.rupikz.common.exception.TemperatureNotFoundException
 import com.example.rupikz.dto.TemperatureCreateDto
+import com.example.rupikz.dto.request.TemperatureAverageDto
 import com.example.rupikz.entity.TemperatureEntity
 import com.example.rupikz.repository.CityRepository
 import com.example.rupikz.repository.TemperatureRepository
@@ -19,6 +20,15 @@ class TemperatureService(
 ) {
 
     fun findAll(pageable: Pageable): Page<TemperatureEntity> = temperatureRepository.findAll(pageable)
+
+    fun average(cityId: UUID, data: TemperatureAverageDto): Double {
+        if (!cityRepository.existsById(cityId)) throw CityNotFoundException()
+        return temperatureRepository.averageByCityId(
+            cityId,
+            periodEnd = data.periodEnd,
+            periodStart = data.periodStart
+        )
+    }
 
     fun create(temperatureCreateDto: TemperatureCreateDto): TemperatureEntity {
         if (temperatureRepository.existsByDate(temperatureCreateDto.date)) throw TemperatureAlreadyExistException()
