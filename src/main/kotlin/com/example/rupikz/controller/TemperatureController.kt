@@ -31,7 +31,6 @@ class TemperatureController(private val temperatureService: TemperatureService) 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
     fun create(@Valid @RequestBody temperatureCreateDto: TemperatureCreateDto): TemperatureEntity {
-        println(temperatureCreateDto)
         return temperatureService.create(temperatureCreateDto)
     }
 

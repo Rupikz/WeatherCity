@@ -5,7 +5,6 @@ import com.example.rupikz.common.exception.CityNotFoundException
 import com.example.rupikz.dto.CityCreateDto
 import com.example.rupikz.repository.CityRepository
 import com.example.rupikz.entity.CityEntity
-import com.example.rupikz.enum.CityType
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -27,7 +26,7 @@ class CityService(
         if (cityRepository.existsByName(cityCreateDto.name)) throw CityAlreadyExistException()
         return CityEntity().apply {
             this.name = cityCreateDto.name
-            this.type = CityType.valueOf(cityCreateDto.type)
+            this.type = cityCreateDto.type
             this.description = cityCreateDto.description
             cityRepository.save(this)
         }

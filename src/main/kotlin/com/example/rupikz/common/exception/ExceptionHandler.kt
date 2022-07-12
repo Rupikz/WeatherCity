@@ -4,7 +4,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import javax.validation.ConstraintViolationException
+import org.springframework.web.context.request.WebRequest
+import java.util.*
+import javax.validation.ValidationException
 
 class CityNotFoundException : RuntimeException("City not found")
 class CityAlreadyExistException : RuntimeException("City already exist")
@@ -14,19 +16,19 @@ class TemperatureAlreadyExistException : RuntimeException("Temperature already e
 
 @RestControllerAdvice
 class ExceptionHandler {
+    @ExceptionHandler(ValidationException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun validationException(e: ValidationException, request: WebRequest): ErrorMessage {
+        return errorMessage(e, HttpStatus.BAD_REQUEST, request.contextPath)
+    }
+
     @ExceptionHandler(value = [
         CityNotFoundException::class,
         TemperatureNotFoundException::class
     ])
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun notFoundException(e: RuntimeException): ErrorMessage {
-        return errorMessage(e, "not_found")
-    }
-
-    @ExceptionHandler(ConstraintViolationException::class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    fun validationException(e: ConstraintViolationException): ErrorMessage {
-        return errorMessage(e, "validation_failed")
+    fun notFoundException(e: RuntimeException, request: WebRequest): ErrorMessage {
+        return errorMessage(e, HttpStatus.NOT_FOUND, request.contextPath)
     }
 
     @ExceptionHandler(value = [
@@ -34,11 +36,22 @@ class ExceptionHandler {
         TemperatureAlreadyExistException::class
     ])
     @ResponseStatus(HttpStatus.CONFLICT)
-    fun alreadyExistException(e: RuntimeException): ErrorMessage {
-        return errorMessage(e, "already_exist")
+    fun alreadyExistException(e: RuntimeException, request: WebRequest): ErrorMessage {
+        return errorMessage(e, HttpStatus.CONFLICT, request.contextPath)
     }
 
-    fun errorMessage(exception: Throwable, code: String) = ErrorMessage(exception.message ?: "", code)
+    @ExceptionHandler(value = [Exception::class])
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected fun handleOtherException(e: Exception, request: WebRequest): ErrorMessage {
+        return errorMessage(e, HttpStatus.INTERNAL_SERVER_ERROR, request.contextPath)
+    }
 
-    data class ErrorMessage(val message: String, val code: String)
+    fun errorMessage(exception: Throwable, status: HttpStatus, path: String) = ErrorMessage(
+        timestamp = Calendar.getInstance().time,
+        status = status.value(),
+        message = exception.message,
+        error = exception.cause?.message
+    )
+
+    data class ErrorMessage(val timestamp: Date, val status: Int, val message: String?, val error: String?)
 }

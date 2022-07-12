@@ -1,13 +1,16 @@
 package com.example.rupikz.common.validation
 
+import java.lang.annotation.Documented
+import java.lang.annotation.Repeatable
 import javax.validation.Constraint
 import javax.validation.Payload
 import javax.validation.ReportAsSingleViolation
 import javax.validation.constraints.Pattern
-import kotlin.reflect.KClass
-import kotlin.annotation.AnnotationTarget.*
 import kotlin.annotation.AnnotationRetention.*
+import kotlin.annotation.AnnotationTarget.*
+import kotlin.reflect.KClass
 
+@Documented
 @ReportAsSingleViolation
 @Constraint(validatedBy = [])
 @Pattern(
@@ -16,8 +19,18 @@ import kotlin.annotation.AnnotationRetention.*
 )
 @Retention(RUNTIME)
 @Target(FIELD, CONSTRUCTOR, PROPERTY, VALUE_PARAMETER, CLASS)
+@Repeatable(
+    ValidUUID.List::class
+)
 annotation class ValidUUID(
     val message: String = "Invalid UUID",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<Payload>> = []
-)
+) {
+    @Target(FUNCTION, PROPERTY_GETTER, PROPERTY_SETTER, FIELD, ANNOTATION_CLASS, CONSTRUCTOR, VALUE_PARAMETER)
+    @Retention(
+        RUNTIME
+    )
+    @Documented
+    annotation class List(vararg val value: ValidUUID)
+}

@@ -2,6 +2,7 @@ package com.example.rupikz.entity
 
 import javax.persistence.*
 import com.example.rupikz.enum.CityType
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.Hibernate
 
 // TODO: Data class?
@@ -23,6 +24,7 @@ data class CityEntity(
     @Column(length = 255)
     var description: String? = null,
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "city", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val temperatures: List<TemperatureEntity>? = null
 

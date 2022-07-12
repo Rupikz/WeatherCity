@@ -1,5 +1,6 @@
 package com.example.rupikz.entity
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import java.util.Date
 import javax.persistence.*
 import javax.validation.constraints.Min
@@ -18,7 +19,8 @@ data class TemperatureEntity(
     @Column(nullable = false)
     var celsius: Int? = null,
 
-    @ManyToOne
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "city_id", nullable = false)
     var city: CityEntity? = null
 
