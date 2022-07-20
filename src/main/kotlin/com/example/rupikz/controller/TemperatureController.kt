@@ -5,6 +5,8 @@ import com.example.rupikz.dto.TemperatureCreateDto
 import com.example.rupikz.dto.request.TemperatureAverageDto
 import com.example.rupikz.entity.TemperatureEntity
 import com.example.rupikz.service.TemperatureService
+import io.swagger.v3.oas.annotations.Operation
+import org.springdoc.api.annotations.ParameterObject
 import org.springframework.web.bind.annotation.*
 import org.springframework.http.HttpStatus
 import org.springframework.validation.annotation.Validated
@@ -24,7 +26,7 @@ class TemperatureController(private val temperatureService: TemperatureService) 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping()
     fun findAll(
-        @PageableDefault(size = 50, sort = ["date"], direction = Sort.Direction.ASC) pageable: Pageable
+        @ParameterObject @PageableDefault(size = 50, sort = ["date"], direction = Sort.Direction.ASC) pageable: Pageable
     ): Page<TemperatureEntity> {
         return temperatureService.findAll(pageable)
     }
@@ -44,6 +46,7 @@ class TemperatureController(private val temperatureService: TemperatureService) 
         return temperatureService.create(temperatureCreateDto)
     }
 
+    @Operation(summary = "Delete a temperature by its id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
     fun delete(@NotNull @ValidUUID @PathVariable("id") id: String) {
